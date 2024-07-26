@@ -75,7 +75,7 @@ int main(void)
 
     shader->Bind();
     shader->SetUniform4f("u_Color", 1.0f, 1.0f, 1.0f, 1.0f);
-
+    
     
     //-----Delta Time testing-----//
     double now = glfwGetTime();
@@ -86,10 +86,12 @@ int main(void)
     float red = 0.0f;
     float green = 0.5f;
     float blue = 1.0f;
+    float alpha = 1.0f;
 
     float changeValR = 1;
     float changeValG = 1;
     float changeValB = 1;
+    float changeValA = 1;
 
     //Clearing everything
     vao->Unbind();
@@ -98,11 +100,16 @@ int main(void)
     ib->Unbind();
 
 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    Renderer* renderer = new Renderer();
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
+        renderer->Clear();
 
         // Delta Time Testing
         now = glfwGetTime();
@@ -129,17 +136,23 @@ int main(void)
         else if (blue >= 1.0f) {
             changeValB = -1;
         }
+
+        if (alpha <= 0.0f) {
+            changeValA = 1;
+        }
+        else if (alpha >= 1.0f) {
+            changeValA = -1;
+        }
+
         red += changeValR * deltaTime;
         green += changeValG * deltaTime;
         blue += changeValB * deltaTime;
+        alpha += changeValA * deltaTime;
         
         shader->Bind();
-        shader->SetUniform4f("u_Color", red, green, blue, 1.0f);
+        shader->SetUniform4f("u_Color", red, green, blue, alpha);
 
-        vao->Bind();
-        ib->Bind();
-
-        GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+        renderer->Draw(*vao, *ib, *shader);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
@@ -155,6 +168,7 @@ int main(void)
     delete ib;
     delete vao;
     delete shader;
+    delete renderer;
 
     glfwTerminate();
     return 0;

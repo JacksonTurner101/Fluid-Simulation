@@ -17,7 +17,7 @@ void VertexArray::AddVertexAttribPointer(int size, GLenum type, GLboolean normal
 	m_CurrentIndex++;
 }
 
-void VertexArray::Bind()
+void VertexArray::Bind() const
 {
 	GLCall(glBindVertexArray(m_Id));
 }

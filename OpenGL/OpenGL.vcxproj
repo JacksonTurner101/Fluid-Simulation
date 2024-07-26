@@ -155,6 +155,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="res\shapes\Circle.cpp" />
+    <ClCompile Include="res\shapes\Shape.cpp" />
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
@@ -167,6 +169,8 @@
     <None Include="res\shaders\vertex.shader" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="res\shapes\Circle.h" />
+    <ClInclude Include="res\shapes\Shape.h" />
     <ClInclude Include="src\IndexBuffer.h" />
     <ClInclude Include="src\Renderer.h" />
     <ClInclude Include="src\Shader.h" />

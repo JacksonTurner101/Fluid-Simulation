@@ -13,6 +13,6 @@ public:
 	~VertexArray();
 	//void AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout);
 	void AddVertexAttribPointer(int size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid* pointer);
-	void Bind();
+	void Bind() const;
 	void Unbind();
 };
