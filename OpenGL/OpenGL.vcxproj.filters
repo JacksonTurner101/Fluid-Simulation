@@ -7,8 +7,9 @@
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\VertexArray.cpp" />
     <ClCompile Include="src\Shader.cpp" />
-    <ClCompile Include="res\shapes\Circle.cpp" />
-    <ClCompile Include="res\shapes\Shape.cpp" />
+    <ClCompile Include="src\shapes\Circle.cpp" />
+    <ClCompile Include="src\shapes\Shape.cpp" />
+    <ClCompile Include="src\shapes\Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\vertex.shader" />
@@ -20,7 +21,8 @@
     <ClInclude Include="src\IndexBuffer.h" />
     <ClInclude Include="src\VertexArray.h" />
     <ClInclude Include="src\Shader.h" />
-    <ClInclude Include="res\shapes\Circle.h" />
-    <ClInclude Include="res\shapes\Shape.h" />
+    <ClInclude Include="src\shapes\Circle.h" />
+    <ClInclude Include="src\shapes\Shape.h" />
+    <ClInclude Include="src\shapes\Triangle.h" />
   </ItemGroup>
 </Project>

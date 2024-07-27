@@ -10,10 +10,15 @@ Shader::Shader(const std::string& vertexShaderFilePath, const std::string fragme
 
 }
 
+Shader::Shader()
+{
+    //If calling default constructor, assign default shaders
+    m_Id = CreateShader(ReadAndReturnFileString("res\shaders\vertex.shader"), ReadAndReturnFileString("res\shaders\fragment.shader"));
+}
+
 Shader::~Shader()
 {
     glDeleteProgram(m_Id);
-
 }
 
 void Shader::Bind() const
