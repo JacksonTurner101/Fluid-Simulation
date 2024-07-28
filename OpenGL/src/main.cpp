@@ -10,6 +10,7 @@
 #include "VertexArray.h"
 #include "Shader.h"
 #include "shapes/Triangle.h"
+#include "shapes/Square.h"
 
 
 int main(void)
@@ -86,6 +87,8 @@ int main(void)
     
     //Shape testing
     Triangle triangle;
+    Square square;
+
 
     float red = 0.0f;
     float green = 0.5f;
@@ -157,7 +160,8 @@ int main(void)
         //shader->SetUniform4f("u_Color", red, green, blue, alpha);
 
         //renderer->Draw(*vao, *ib, *shader);
-        triangle.Draw();
+        //triangle.Draw();
+        square.Draw();
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);

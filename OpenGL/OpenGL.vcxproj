@@ -157,6 +157,7 @@
   <ItemGroup>
     <ClCompile Include="src\shapes\Circle.cpp" />
     <ClCompile Include="src\shapes\Shape.cpp" />
+    <ClCompile Include="src\shapes\Square.cpp" />
     <ClCompile Include="src\shapes\Triangle.cpp" />
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -174,6 +175,7 @@
   <ItemGroup>
     <ClInclude Include="src\shapes\Circle.h" />
     <ClInclude Include="src\shapes\Shape.h" />
+    <ClInclude Include="src\shapes\Square.h" />
     <ClInclude Include="src\shapes\Triangle.h" />
     <ClInclude Include="src\IndexBuffer.h" />
     <ClInclude Include="src\Renderer.h" />
