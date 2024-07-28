@@ -9,6 +9,7 @@
 #include "IndexBuffer.h"
 #include "VertexArray.h"
 #include "Shader.h"
+#include "shapes/Triangle.h"
 
 
 int main(void)
@@ -82,6 +83,9 @@ int main(void)
     double last = glfwGetTime();
     double deltaTime = 0;
     //end testing
+    
+    //Shape testing
+    Triangle triangle;
 
     float red = 0.0f;
     float green = 0.5f;
@@ -149,10 +153,11 @@ int main(void)
         blue += changeValB * deltaTime;
         alpha += changeValA * deltaTime;
         
-        shader->Bind();
-        shader->SetUniform4f("u_Color", red, green, blue, alpha);
+        //shader->Bind();
+        //shader->SetUniform4f("u_Color", red, green, blue, alpha);
 
-        renderer->Draw(*vao, *ib, *shader);
+        //renderer->Draw(*vao, *ib, *shader);
+        triangle.Draw();
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);

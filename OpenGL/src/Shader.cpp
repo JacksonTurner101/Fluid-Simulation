@@ -13,7 +13,7 @@ Shader::Shader(const std::string& vertexShaderFilePath, const std::string fragme
 Shader::Shader()
 {
     //If calling default constructor, assign default shaders
-    m_Id = CreateShader(ReadAndReturnFileString("res\shaders\vertex.shader"), ReadAndReturnFileString("res\shaders\fragment.shader"));
+    m_Id = CreateShader(ReadAndReturnFileString("res/shaders/defaultVert.shader"), ReadAndReturnFileString("res/shaders/defaultFrag.shader"));
 }
 
 Shader::~Shader()

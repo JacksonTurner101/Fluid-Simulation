@@ -2,6 +2,11 @@
 
 void Triangle::Draw()
 {
+	m_Shader.Bind();
+	m_Vao.Bind();
+	m_Ib.Bind();
+
+	GLCall(glDrawElements(GL_TRIANGLES, 4, GL_UNSIGNED_INT, nullptr));
 
 }
 
@@ -19,4 +24,5 @@ Triangle::Triangle() {
 
 	m_Vb.AddData(m_Vertices, 6 * sizeof(float));
 	m_Ib.AddData(m_Indices, 3);
+	m_Vao.AddVertexAttribPointer(2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
 }

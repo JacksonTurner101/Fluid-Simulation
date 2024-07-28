@@ -3,6 +3,7 @@
 #include "../VertexArray.h"
 #include "../VertexBuffer.h"
 #include "../Shader.h"
+#include "../Renderer.h"
 
 class Shape {
 public:
