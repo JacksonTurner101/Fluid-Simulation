@@ -12,6 +12,9 @@
 #include "shapes/Triangle.h"
 #include "shapes/Square.h"
 
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+
 
 int main(void)
 {
@@ -86,9 +89,10 @@ int main(void)
     //end testing
     
     //Shape testing
-    Triangle triangle;
-    Square square;
+    //Triangle triangle;
+    //Square square;
 
+    glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
 
     float red = 0.0f;
     float green = 0.5f;
@@ -155,13 +159,13 @@ int main(void)
         green += changeValG * deltaTime;
         blue += changeValB * deltaTime;
         alpha += changeValA * deltaTime;
-        
-        //shader->Bind();
-        //shader->SetUniform4f("u_Color", red, green, blue, alpha);
+      
+        shader->Bind();
+        shader->SetUniform4f("u_Color", red, green, blue, alpha);
 
-        //renderer->Draw(*vao, *ib, *shader);
+        renderer->Draw(*vao, *ib, *shader);
         //triangle.Draw();
-        square.Draw();
+        //square.Draw();
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
