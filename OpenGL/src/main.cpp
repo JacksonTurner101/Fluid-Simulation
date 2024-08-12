@@ -15,6 +15,10 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
+#include "ImGui/imgui.h"
+#include "ImGui/imgui_impl_glfw.h"
+#include "ImGui/imgui_impl_opengl3.h"
+
 
 int main(void)
 {
@@ -39,6 +43,11 @@ int main(void)
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
+
+    // Creating ImGUI Context
+    ImGui::CreateContext();
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init();
 
     glfwSwapInterval(1);
 
@@ -100,10 +109,7 @@ int main(void)
     //Shape testing
     //Triangle triangle;
     //Square square;
-
-
     
-
     float red = 0.0f;
     float green = 0.5f;
     float blue = 1.0f;
@@ -124,11 +130,17 @@ int main(void)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+
     Renderer* renderer = new Renderer();
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+        ImGui::ShowDemoWindow();
+
         /* Render here */
         renderer->Clear();
 
@@ -177,6 +189,9 @@ int main(void)
         //triangle.Draw();
         //square.Draw();
 
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
 
@@ -192,6 +207,10 @@ int main(void)
     delete vao;
     delete shader;
     delete renderer;
+
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();;
 
     glfwTerminate();
     return 0;
