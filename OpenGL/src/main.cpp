@@ -23,6 +23,7 @@
 int main(void)
 {
     GLFWwindow* window;
+    Renderer* renderer = new Renderer();
 
     /* Initialize the library */
     if (!glfwInit())
@@ -44,7 +45,7 @@ int main(void)
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
 
-    // Creating ImGUI Context
+    //-----Creating ImGUI Context and Initialising-----//
     ImGui::CreateContext();
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init();
@@ -86,30 +87,29 @@ int main(void)
 
     //-----SHADER STUFF-----//
     Shader* shader = new Shader("res/shaders/vertex.shader", "res/shaders/fragment.shader");
+    //shader->Bind();
+    //shader->SetUniform4f("u_Color", 1.0f, 1.0f, 1.0f, 1.0f);
 
+    //-----Vertex Shader Matrix Stuff-----//
     glm::mat4 proj = glm::ortho(-400.0f, 400.0f, -300.0f, 300.0f, -1.0f, 1.0f);
-
     glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(100.0f, 0.0f, 0.0f));
+    //glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 10.0f, 0.0f)); <-- Moved into render loop so I can change model matrix with ImGui
+    //glm::mat4 MVPMatrix = proj * view * model;
 
-    glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 10.0f, 0.0f));
-
-    glm::mat4 MVPMatrix = proj * view * model;
-
-    shader->Bind();
-    shader->SetUniform4f("u_Color", 1.0f, 1.0f, 1.0f, 1.0f);
-    shader->SetUniformMat4f("u_MVP", MVPMatrix);
+    //shader->SetUniformMat4f("u_MVP", MVPMatrix);
     
     
     //-----Delta Time testing-----//
     double now = glfwGetTime();
     double last = glfwGetTime();
     double deltaTime = 0;
-    //end testing
     
-    //Shape testing
+    
+    //-----Shape testing-----//
     //Triangle triangle;
     //Square square;
     
+    //-----Changing Colours Testing-----//
     float red = 0.0f;
     float green = 0.5f;
     float blue = 1.0f;
@@ -126,20 +126,28 @@ int main(void)
     vb->Unbind();
     ib->Unbind();
 
-
+    //This enables alpha value so I can make stuff see through
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-
-    Renderer* renderer = new Renderer();
+    //Variables
+    glm::vec3 translation(0.0f, 0.0f, 0.0f);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
+        //----ImGui Stuff----//
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-        ImGui::ShowDemoWindow();
+        //ImGui::ShowDemoWindow();
+        // 
+        //Make Sure Gui stuff goes between begin and end
+        ImGui::Begin("Stuff");
+        ImGui::SliderFloat("X Translation", &translation.x,-400.0f,400.0f);
+        ImGui::SliderFloat("Y Translation", &translation.y, -300.0f, 300.0f);
+        ImGui::End();
+        //-----End of ImGui Stuff-----//
 
         /* Render here */
         renderer->Clear();
@@ -182,8 +190,13 @@ int main(void)
         blue += changeValB * deltaTime;
         alpha += changeValA * deltaTime;
       
+        glm::mat4 model = glm::translate(glm::mat4(1.0f), translation);
+        glm::mat4 MVPMatrix = proj * view * model;
+
         shader->Bind();
         shader->SetUniform4f("u_Color", red, green, blue, alpha);
+        shader->SetUniformMat4f("u_MVP", MVPMatrix);
+
 
         renderer->Draw(*vao, *ib, *shader);
         //triangle.Draw();
