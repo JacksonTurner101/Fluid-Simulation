@@ -30,7 +30,7 @@ int main(void)
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    window = glfwCreateWindow(800, 600, "Hello World", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -51,13 +51,13 @@ int main(void)
     //2d positions for a square
     float positions[8] = {
         //top left
-        -0.5f,0.5f,//0
+        -100.0f,100.0f,//0
         //top right
-        0.5f,0.5f,//1
+        100.0f,100.0f,//1
         //bottom left
-        -0.5f,-0.5f,//2
+        -100.0f,-100.0f,//2
         //bottom right
-        0.5f,-0.5f//3
+        100.0f,-100.0f//3
     };
 
     VertexBuffer* vb = new VertexBuffer(positions, 8 * sizeof(float));
@@ -78,8 +78,17 @@ int main(void)
     //-----SHADER STUFF-----//
     Shader* shader = new Shader("res/shaders/vertex.shader", "res/shaders/fragment.shader");
 
+    glm::mat4 proj = glm::ortho(-400.0f, 400.0f, -300.0f, 300.0f, -1.0f, 1.0f);
+
+    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(100.0f, 0.0f, 0.0f));
+
+    glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 10.0f, 0.0f));
+
+    glm::mat4 MVPMatrix = proj * view * model;
+
     shader->Bind();
     shader->SetUniform4f("u_Color", 1.0f, 1.0f, 1.0f, 1.0f);
+    shader->SetUniformMat4f("u_MVP", MVPMatrix);
     
     
     //-----Delta Time testing-----//
@@ -92,7 +101,8 @@ int main(void)
     //Triangle triangle;
     //Square square;
 
-    glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
+
+    
 
     float red = 0.0f;
     float green = 0.5f;
