@@ -18,6 +18,16 @@
 void GLClearError();
 bool GLLogCall(const char* function, const char* file, int line);
 
+struct RenderData {
+    VertexArray vao;
+    IndexBuffer ib;
+    Shader shader;
+    GLenum mode;
+    int count;
+    GLenum type;
+
+};
+
 class Renderer {
 
 public:
