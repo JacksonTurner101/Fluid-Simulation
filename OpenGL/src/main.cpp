@@ -130,6 +130,8 @@ int main(void)
 
     //Variables
     glm::vec3 translation(0.0f, 0.0f, 0.0f);
+    float angle = glm::radians(0.0f);
+    float degrees = 0.0f;
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -144,6 +146,7 @@ int main(void)
         ImGui::Begin("Stuff");
         ImGui::SliderFloat("X Translation", &translation.x,-4.0f,4.0f);
         ImGui::SliderFloat("Y Translation", &translation.y, -3.0f, 3.0f);
+        ImGui::SliderFloat("Z Rotate", &degrees, 0.0f, 360.0f);
         ImGui::End();
         //-----End of ImGui Stuff-----//
 
@@ -179,8 +182,11 @@ int main(void)
         red += changeValR * deltaTime;
         green += changeValG * deltaTime;
         blue += changeValB * deltaTime;
-      
-        glm::mat4 model = glm::translate(glm::mat4(1.0f), translation);
+        
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, translation);
+        angle = glm::radians(degrees);
+        model = glm::rotate(model, angle, glm::vec3(0.0f,0.0f,1.0f));
         glm::mat4 MVPMatrix = proj * view * model;
 
         shader->Bind();
