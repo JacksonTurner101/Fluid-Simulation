@@ -9,8 +9,6 @@
 #include "IndexBuffer.h"
 #include "VertexArray.h"
 #include "Shader.h"
-#include "shapes/Triangle.h"
-#include "shapes/Square.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -18,6 +16,11 @@
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_glfw.h"
 #include "ImGui/imgui_impl_opengl3.h"
+
+#include "tests/TestClearColor.h"
+#include "tests/TestChangeColorUniform.h"
+#include "tests/TestCircleDraw.h"
+
 
 
 int main(void)
@@ -57,168 +60,46 @@ int main(void)
         std::cout << "ERROR! Glew is not GLEW_OK!" << std::endl;
     }
     
-    //-----VERTEX BUFFER STUFF-----//
-    //2d positions for a square
-    float vertices[16] = {
-        //top left position   UV Coordinates
-        -1.0f,1.0f,       -1.0f, 1.0f,//0
-        //top right position
-        1.0f,1.0f,        1.0f,1.0f,//1     
-        //bottom left position
-        -1.0f,-1.0f,      -1.0f,-1.0f,//2
-        //bottom right position
-        1.0f,-1.0f,        1.0f,-1.0f//3
-    };
-
-    VertexBuffer* vb = new VertexBuffer(vertices, 16 * sizeof(float));
-
-    //-----Vertex Array Object-----//
-
-    VertexArray* vao = new VertexArray();
-    vao->AddVertexAttribPointer(2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
-    vao->AddVertexAttribPointer(2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (const void*)(2 * sizeof(float)));
-
-    //-----INDEX BUFFER STUFF-----//
-    unsigned int indices[] = {
-       0,1,3,
-       0,3,2
-    };
-
-    IndexBuffer* ib = new IndexBuffer(indices, 6);
-
-    //-----SHADER STUFF-----//
-    Shader* shader = new Shader("res/shaders/vertex.shader", "res/shaders/fragment.shader");
-    //shader->Bind();
-    //shader->SetUniform3f("u_Color", 1.0f, 1.0f, 1.0f);
-
-    //-----Vertex Shader Matrix Stuff-----//
-    glm::mat4 proj = glm::ortho(-4.0f, 4.0f, -3.0f, 3.0f, -1.0f, 1.0f);
-    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-    //glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 10.0f, 0.0f)); <-- Moved into render loop so I can change model matrix with ImGui
-    //glm::mat4 MVPMatrix = proj * view * model;
-
-    //shader->SetUniformMat4f("u_MVP", MVPMatrix);
-    
-    
     //-----Delta Time testing-----//
     float now = (float)glfwGetTime();
     float last = (float)glfwGetTime();
     float deltaTime = 0;
-    
-    //-----Shape testing-----//
-    //Triangle triangle;
-    //Square square;
-    
-    //-----Changing Colours Testing-----//
-    float red = 0.0f;
-    float green = 0.5f;
-    float blue = 1.0f;
-
-    float changeValR = 1;
-    float changeValG = 1;
-    float changeValB = 1;
-
-    //Clearing everything
-    vao->Unbind();
-    shader->Unbind();
-    vb->Unbind();
-    ib->Unbind();
 
     //This enables alpha value so I can make stuff see through
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    //Variables
-    glm::vec3 translation(0.0f, 0.0f, 0.0f);
-    float angle = glm::radians(0.0f);
-    float degrees = 0.0f;
-    float scale = 1.0f;
+    test::TestCircleDraw* test = new test::TestCircleDraw();
 
-    /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
-        //----ImGui Stuff----//
+        renderer->Clear();
+
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-        //ImGui::ShowDemoWindow();
-        // 
-        //Make Sure Gui stuff goes between begin and end
         ImGui::Begin("Stuff");
-        ImGui::SliderFloat("X Translation", &translation.x,-4.0f,4.0f);
-        ImGui::SliderFloat("Y Translation", &translation.y, -3.0f, 3.0f);
-        ImGui::SliderFloat("Z Rotate", &degrees, 0.0f, 360.0f);
-        ImGui::SliderFloat("Scale", &scale, 0.1f, 2.0f);
 
-        ImGui::End();
-        //-----End of ImGui Stuff-----//
-
-        /* Render here */
-        renderer->Clear();
-
-        // Delta Time Testing
+        // Delta Time
         now = glfwGetTime();
         deltaTime = now - last;
         last = now;
 
-        if (red <= 0.0f) {
-            changeValR = 1;
-        }
-        else if (red >= 1.0f) {
-            changeValR = -1;
-        }
+        test->OnUpdate(deltaTime);
+        test->OnRender();
+        test->OnImGuiRender();
 
-        if (green <= 0.0f) {
-            changeValG = 1;
-        }
-        else if (green >= 1.0f) {
-            changeValG = -1;
-        }
-
-        if (blue <= 0.0f) {
-            changeValB = 1;
-        }
-        else if (blue >= 1.0f) {
-            changeValB = -1;
-        }
-
-        red += changeValR * deltaTime;
-        green += changeValG * deltaTime;
-        blue += changeValB * deltaTime;
-        
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, translation);
-        angle = glm::radians(degrees);
-        model = glm::rotate(model, angle, glm::vec3(0.0f,0.0f,1.0f));
-        glm::vec3 xyzScale(1.0f * scale, 1.0f * scale, 1.0f);
-        model = glm::scale(model, xyzScale);
-        glm::mat4 MVPMatrix = proj * view * model;
-
-        shader->Bind();
-        shader->SetUniform3f("u_Color", red, green, blue);
-        shader->SetUniformMat4f("u_MVP", MVPMatrix);
-
-        renderer->Draw(*vao, *ib, *shader);
-        //triangle.Draw();
-        //square.Draw();
+        ImGui::End();
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-        /* Swap front and back buffers */
         glfwSwapBuffers(window);
-
-        /* Poll for and process events */
         glfwPollEvents();
     }
 
-    //---REMEMBER--- this is beacuse I have allocated these objects to the HEAP and need to free the memory
-    //This gets rid of the perpetual while loop that glfwTerminate() gets into when trying to clean up when these are on the stack
-    delete vb;
-    delete ib;
-    delete vao;
-    delete shader;
     delete renderer;
+    delete test;
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();

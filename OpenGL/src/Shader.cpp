@@ -43,8 +43,6 @@ void Shader::SetUniform3f(const std::string& name, float v0, float v1, float v2)
 
 }
 
-
-
 void Shader::SetUniformMat4f(const std::string& name, glm::mat4 matrix)
 {
     GLCall(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &matrix[0][0]));
@@ -62,8 +60,6 @@ int Shader::GetUniformLocation(const std::string& name)
      m_UniformLocationCache[name] = location;
     
     return location;
-
-
 }
 
 unsigned int Shader::CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
@@ -115,7 +111,7 @@ std::string Shader::ReadAndReturnFileString(const std::string& filePath)
 
     if (!stream.is_open())
     {
-        std::cout << "Failed to open file at file path: " + filePath;
+        std::cout << "Failed to open file at file path: " << filePath << std::endl;
         return "";
     }
     else {

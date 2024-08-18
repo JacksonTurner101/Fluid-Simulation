@@ -19,6 +19,10 @@
     <ClCompile Include="src\vendor\ImGui\imgui_tables.cpp" />
     <ClCompile Include="src\vendor\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="src\vendor\ImGui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="src\tests\TestClearColor.cpp" />
+    <ClCompile Include="src\tests\TestCircleDraw.cpp" />
+    <ClCompile Include="src\tests\TestModelViewProjection.cpp" />
+    <ClCompile Include="src\tests\TestChangeColorUniform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\vertex.shader" />
@@ -163,6 +167,9 @@
     <None Include="src\vendor\glm\detail\type_vec2.inl" />
     <None Include="src\vendor\glm\detail\type_vec3.inl" />
     <None Include="src\vendor\glm\detail\type_vec4.inl" />
+    <None Include="res\shaders\changingColorsFrag.shader" />
+    <None Include="res\shaders\circleFrag.shader" />
+    <None Include="res\shaders\circleVert.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Renderer.h" />
@@ -471,5 +478,10 @@
     <ClInclude Include="src\vendor\ImGui\imstb_truetype.h" />
     <ClInclude Include="src\vendor\ImGui\imgui_impl_opengl3_loader.h" />
     <ClInclude Include="src\vendor\ImGui\imgui_impl_opengl3.h" />
+    <ClInclude Include="src\tests\Test.h" />
+    <ClInclude Include="src\tests\TestClearColor.h" />
+    <ClInclude Include="src\tests\TestCircleDraw.h" />
+    <ClInclude Include="src\tests\TestModelViewProjection.h" />
+    <ClInclude Include="src\tests\TestChangeColorUniform.h" />
   </ItemGroup>
 </Project>
