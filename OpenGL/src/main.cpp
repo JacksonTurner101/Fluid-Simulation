@@ -20,6 +20,7 @@
 #include "tests/TestClearColor.h"
 #include "tests/TestChangeColorUniform.h"
 #include "tests/TestCircleDraw.h"
+#include "tests/TestModelViewProjection.h"
 
 
 
@@ -69,7 +70,7 @@ int main(void)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    test::TestCircleDraw* test = new test::TestCircleDraw();
+    test::TestModelViewProjection* test = new test::TestModelViewProjection();
 
     while (!glfwWindowShouldClose(window))
     {
