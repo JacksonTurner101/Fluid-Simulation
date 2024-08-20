@@ -23,6 +23,7 @@
     <ClCompile Include="src\tests\TestCircleDraw.cpp" />
     <ClCompile Include="src\tests\TestModelViewProjection.cpp" />
     <ClCompile Include="src\tests\TestChangeColorUniform.cpp" />
+    <ClCompile Include="src\tests\TestPhysics.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\vertex.shader" />
@@ -483,5 +484,6 @@
     <ClInclude Include="src\tests\TestCircleDraw.h" />
     <ClInclude Include="src\tests\TestModelViewProjection.h" />
     <ClInclude Include="src\tests\TestChangeColorUniform.h" />
+    <ClInclude Include="src\tests\TestPhysics.h" />
   </ItemGroup>
 </Project>

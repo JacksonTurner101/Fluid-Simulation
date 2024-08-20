@@ -167,6 +167,7 @@
     <ClCompile Include="src\tests\TestCircleDraw.cpp" />
     <ClCompile Include="src\tests\TestClearColor.cpp" />
     <ClCompile Include="src\tests\TestModelViewProjection.cpp" />
+    <ClCompile Include="src\tests\TestPhysics.cpp" />
     <ClCompile Include="src\vendor\glm\detail\glm.cpp" />
     <ClCompile Include="src\vendor\ImGui\imgui.cpp" />
     <ClCompile Include="src\vendor\ImGui\imgui_demo.cpp" />
@@ -338,6 +339,7 @@
     <ClInclude Include="src\tests\TestCircleDraw.h" />
     <ClInclude Include="src\tests\TestClearColor.h" />
     <ClInclude Include="src\tests\TestModelViewProjection.h" />
+    <ClInclude Include="src\tests\TestPhysics.h" />
     <ClInclude Include="src\vendor\glm\common.hpp" />
     <ClInclude Include="src\vendor\glm\detail\compute_common.hpp" />
     <ClInclude Include="src\vendor\glm\detail\compute_vector_decl.hpp" />

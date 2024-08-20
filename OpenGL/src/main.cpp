@@ -21,6 +21,7 @@
 #include "tests/TestChangeColorUniform.h"
 #include "tests/TestCircleDraw.h"
 #include "tests/TestModelViewProjection.h"
+#include "tests/TestPhysics.h"
 
 
 
@@ -70,7 +71,7 @@ int main(void)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    test::TestModelViewProjection* test = new test::TestModelViewProjection();
+    test::TestPhysics* test = new test::TestPhysics();
 
     while (!glfwWindowShouldClose(window))
     {
