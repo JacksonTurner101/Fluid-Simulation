@@ -14,6 +14,7 @@ class Shader {
 		void SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
 		void SetUniform3f(const std::string& name, float v0, float v1, float v2);
 		void SetUniformMat4f(const std::string& name, const glm::mat4 matrix);
+		void SetUniformFloat(const std::string& name, float value);
 
 	private :
 		unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader);

@@ -61,17 +61,17 @@ int main(void)
     {
         std::cout << "ERROR! Glew is not GLEW_OK!" << std::endl;
     }
-    
-    //-----Delta Time testing-----//
-    float now = (float)glfwGetTime();
-    float last = (float)glfwGetTime();
-    float deltaTime = 0;
 
     //This enables alpha value so I can make stuff see through
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     test::TestPhysics* test = new test::TestPhysics();
+    
+    //-----Delta Time testing-----//
+    float now = (float)glfwGetTime();
+    float last = (float)glfwGetTime();
+    float deltaTime = 0;
 
     while (!glfwWindowShouldClose(window))
     {
@@ -80,7 +80,7 @@ int main(void)
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-        ImGui::Begin("Stuff");
+        ImGui::Begin("Variables");
 
         // Delta Time
         now = glfwGetTime();

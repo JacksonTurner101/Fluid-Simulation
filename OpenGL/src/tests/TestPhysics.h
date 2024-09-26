@@ -2,6 +2,7 @@
 
 #include "Test.h"
 #include "glm/gtc/matrix_transform.hpp"
+#include <cstdlib>
 
 
 namespace test {
@@ -23,6 +24,9 @@ namespace test {
 	private:
 		void CheckCollisions();
 		void UpdatePosition(float deltaTime);
+		void CheckBallLineCollision(glm::vec2 linePosition, glm::vec2 lineDirection);
+		void ResolveCollision(float penetrationDepth, glm::vec2 collisionNormal);
+		void CheckBoundingBoxCollision(glm::vec2 boxSize);
 
 		VertexArray vao;
 		VertexBuffer vb;
@@ -34,6 +38,7 @@ namespace test {
 		glm::vec3 translation;
 		glm::vec2 boundingBox;
 		Particle ball;
+		float speed;
 
 	};
 }

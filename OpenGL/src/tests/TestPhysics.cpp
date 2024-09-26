@@ -1,6 +1,7 @@
 #pragma once
 
 #include "TestPhysics.h"
+#include "iostream"
 
 namespace test {
 
@@ -8,7 +9,8 @@ namespace test {
 		: shader("res/shaders/circleVert.shader", "res/shaders/circleFrag.shader"),
 		vao(), vb(), ib(), translation(0.0f, -0.01f, 0.0f), modelMatrix(glm::mat4(1.0f)),
 		boundingBox(40.0f,30.0f),
-		ball{ glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.7f, -0.3f, 0.0f),glm::vec3(0.0f, -0.02f, 0.0f), 1 }
+		ball{ glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.7f, -0.3f, 0.0f),glm::vec3(0.0f, -9.8f, 0.0f), 1 },
+		speed(20.0f)
 	{
 		vb.Bind();
 		vao.Bind();
@@ -38,7 +40,11 @@ namespace test {
 
 		projectionMatrix = glm::ortho(-boundingBox.x, boundingBox.x, -boundingBox.y, boundingBox.y, -1.0f, 1.0f);
 		viewMatrix = glm::translate(glm::mat4(1.0f), ball.position);
+		viewMatrix = glm::scale(viewMatrix, glm::vec3(ball.size, ball.size, ball.size));
 		glm::mat4 MVPMatrix = modelMatrix * viewMatrix * projectionMatrix;
+
+		//top and bottom direction vector = Vec2(1,0)
+		//left and right direction vector = Vec2(0,1)
 
 	}
 
@@ -66,39 +72,124 @@ namespace test {
 
 	void test::TestPhysics::OnImGuiRender()
 	{
-
+		ImGui::SliderFloat("Speed", &speed, 0.0f, 100.0f);
+		ImGui::SliderFloat("Ball Size", &ball.size, 1.0f, 10.0f);
 
 	}
 
 	void TestPhysics::CheckCollisions()
 	{
-		if (ball.position.y < -30 + ball.size) {
-			ball.velocity.y *= -1;
+		//float t = ball.position.x / 1;
+
+		//float closestCoordX = 0 + t * 1;
+		//float closestCoordY = -30 + t * 0;
+
+
+		//glm::vec2 closestCoord(closestCoordX, closestCoordY);
+
+		//std::cout << CheckBallLineCollision(glm::vec2(0,-30),glm::vec2(1,0)) << std::endl;
+
+
+		//CheckBallLineCollision(glm::vec2(0.0f, -30.0f), glm::vec2(1.0f, 0.0f));
+		//if (ball.position.y < -30 + ball.size) {
+		//	ball.velocity.y *= -1;
+
+		//}
+
+		/*if (ball.position.y > 30.0f - ball.size) {
+			ball.velocity.y *= -1.0f;
 
 		}
 
-		if (ball.position.y > 30 - ball.size) {
-			ball.velocity.y *= -1;
+		if (ball.position.x < -40.0f + ball.size) {
+			ball.velocity.x *= -1.0f;
 
 		}
 
-		if (ball.position.x < -40 + ball.size) {
+		if (ball.position.x > 40.0f - ball.size) {
+			ball.velocity.x *= -1.0f;
+		}*/
+
+		CheckBoundingBoxCollision(boundingBox);
+
+	}
+
+	void TestPhysics::CheckBallLineCollision(glm::vec2 linePosition, glm::vec2 lineDirection) {
+		float t = ((ball.position.x - linePosition.x) * lineDirection.x +
+			(ball.position.y - linePosition.y) * lineDirection.y) /
+			((lineDirection.x * lineDirection.x) + (lineDirection.y * lineDirection.y));
+		
+		float closestCoordX = linePosition.x + t * lineDirection.x;
+		float closestCoordY = linePosition.y + t * lineDirection.y;
+
+		float distance = (float)glm::sqrt((ball.position.x - closestCoordX) * (ball.position.x - closestCoordX) + 
+		(ball.position.y - closestCoordY) * (ball.position.y - closestCoordY));
+
+		if (distance <= ball.size) {
+			float collisionNormalX = ball.position.x - closestCoordX;
+			float collisionNormalY = ball.position.y - closestCoordY;
+
+			glm::vec2 normalVector = glm::normalize(glm::vec2(collisionNormalX, collisionNormalY));
+
+			float penetrationDepth = ball.size - distance;
+
+
+			ResolveCollision(penetrationDepth, normalVector);
+		}
+	}
+
+	void TestPhysics::CheckBoundingBoxCollision(glm::vec2 boxSize)
+	{
+		
+
+		if (abs(ball.position.x) > boundingBox.x - ball.size) {
 			ball.velocity.x *= -1;
-
 		}
 
-		if (ball.position.x > 40 - ball.size) {
-			ball.velocity.x *= -1;
+		if (abs(ball.position.y) > boundingBox.y - ball.size) {
+			ball.velocity.y *= -1;
 		}
+	}
+
+
+	//problem here - need a way to reverse the velocity when collision is detected along the correct axis
+	 
+	void TestPhysics::ResolveCollision(float penetrationDepth, glm::vec2 collisionNormal) {
+		modelMatrix = glm::mat4(1.0f); // Reset to identity
+
+		// New ball position
+		ball.position += glm::vec3(collisionNormal.x * penetrationDepth, collisionNormal.y * penetrationDepth, 0);
+
+		// Apply scale first, then translation
+		modelMatrix = glm::scale(modelMatrix, glm::vec3(ball.size, ball.size, ball.size));
+		modelMatrix = glm::translate(modelMatrix, ball.position);
+
+		// Compute MVP matrix
+		glm::mat4 MVPMatrix = projectionMatrix * viewMatrix * modelMatrix;
+
+		shader.Bind();
+		shader.SetUniformMat4f("u_MVP", MVPMatrix);
 	}
 
 	void TestPhysics::UpdatePosition(float deltaTime)
 	{
-		ball.velocity += ball.acceleration;
-		ball.position += ball.velocity;
-		modelMatrix = glm::translate(modelMatrix, ball.velocity);
+		// Update velocity with acceleration (gravity)
+		ball.velocity += ball.acceleration * deltaTime;
+
+		// Update position with velocity
+		ball.position += ball.velocity * deltaTime;
+
+		// Reset the model matrix
+		modelMatrix = glm::mat4(1.0f); // Reset to identity
+
+		// Apply scale first, then translation
+		modelMatrix = glm::translate(modelMatrix, ball.position);
+		modelMatrix = glm::scale(modelMatrix, glm::vec3(ball.size, ball.size, ball.size));
+
+		// Compute MVP matrix
 		glm::mat4 MVPMatrix = projectionMatrix * viewMatrix * modelMatrix;
 
+		// Bind shader and set the updated MVP matrix
 		shader.Bind();
 		shader.SetUniformMat4f("u_MVP", MVPMatrix);
 	}
