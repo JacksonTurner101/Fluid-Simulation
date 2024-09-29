@@ -39,6 +39,7 @@ namespace test {
 		glm::vec2 boundingBox;
 		Particle ball;
 		float speed;
+		float bounceDampenerVal;
 
 	};
 }

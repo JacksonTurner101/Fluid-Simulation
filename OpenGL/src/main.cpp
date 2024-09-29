@@ -68,13 +68,19 @@ int main(void)
 
     test::TestPhysics* test = new test::TestPhysics();
     
-    //-----Delta Time testing-----//
+    //-----Delta Time -----//
     float now = (float)glfwGetTime();
     float last = (float)glfwGetTime();
     float deltaTime = 0;
 
+
     while (!glfwWindowShouldClose(window))
     {
+        // Delta Time
+        now = glfwGetTime();
+        deltaTime = now - last;
+        last = now;
+
         renderer->Clear();
 
         ImGui_ImplOpenGL3_NewFrame();
@@ -82,10 +88,7 @@ int main(void)
         ImGui::NewFrame();
         ImGui::Begin("Variables");
 
-        // Delta Time
-        now = glfwGetTime();
-        deltaTime = now - last;
-        last = now;
+        
 
         test->OnUpdate(deltaTime);
         test->OnRender();

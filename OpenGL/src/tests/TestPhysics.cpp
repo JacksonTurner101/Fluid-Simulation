@@ -10,7 +10,7 @@ namespace test {
 		vao(), vb(), ib(), translation(0.0f, -0.01f, 0.0f), modelMatrix(glm::mat4(1.0f)),
 		boundingBox(40.0f,30.0f),
 		ball{ glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.7f, -0.3f, 0.0f),glm::vec3(0.0f, -9.8f, 0.0f), 1 },
-		speed(20.0f)
+		speed(1.0f), bounceDampenerVal(1.0f)
 	{
 		vb.Bind();
 		vao.Bind();
@@ -72,43 +72,15 @@ namespace test {
 
 	void test::TestPhysics::OnImGuiRender()
 	{
-		ImGui::SliderFloat("Speed", &speed, 0.0f, 100.0f);
+		ImGui::SliderFloat("Speed", &speed, 0.0f, 10.0f);
 		ImGui::SliderFloat("Ball Size", &ball.size, 1.0f, 10.0f);
+		ImGui::SliderFloat("Ball Bounce Dampener Value", &bounceDampenerVal, 0.01f, 1.0f);
 
 	}
 
 	void TestPhysics::CheckCollisions()
 	{
-		//float t = ball.position.x / 1;
-
-		//float closestCoordX = 0 + t * 1;
-		//float closestCoordY = -30 + t * 0;
-
-
-		//glm::vec2 closestCoord(closestCoordX, closestCoordY);
-
-		//std::cout << CheckBallLineCollision(glm::vec2(0,-30),glm::vec2(1,0)) << std::endl;
-
-
-		//CheckBallLineCollision(glm::vec2(0.0f, -30.0f), glm::vec2(1.0f, 0.0f));
-		//if (ball.position.y < -30 + ball.size) {
-		//	ball.velocity.y *= -1;
-
-		//}
-
-		/*if (ball.position.y > 30.0f - ball.size) {
-			ball.velocity.y *= -1.0f;
-
-		}
-
-		if (ball.position.x < -40.0f + ball.size) {
-			ball.velocity.x *= -1.0f;
-
-		}
-
-		if (ball.position.x > 40.0f - ball.size) {
-			ball.velocity.x *= -1.0f;
-		}*/
+		
 
 		CheckBoundingBoxCollision(boundingBox);
 
@@ -141,13 +113,14 @@ namespace test {
 	void TestPhysics::CheckBoundingBoxCollision(glm::vec2 boxSize)
 	{
 		
-
 		if (abs(ball.position.x) > boundingBox.x - ball.size) {
-			ball.velocity.x *= -1;
+			ball.position.x = (boundingBox.x - 1 * ball.size) * glm::sign(ball.position.x);
+			ball.velocity.x *= -1 * bounceDampenerVal;
 		}
 
 		if (abs(ball.position.y) > boundingBox.y - ball.size) {
-			ball.velocity.y *= -1;
+			ball.position.y = (boundingBox.y - 1 * ball.size) * glm::sign(ball.position.y);
+			ball.velocity.y *= -1 * bounceDampenerVal;
 		}
 	}
 
@@ -173,6 +146,8 @@ namespace test {
 
 	void TestPhysics::UpdatePosition(float deltaTime)
 	{
+		deltaTime *= speed;
+
 		// Update velocity with acceleration (gravity)
 		ball.velocity += ball.acceleration * deltaTime;
 
