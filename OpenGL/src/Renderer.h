@@ -25,7 +25,6 @@ struct RenderData {
     GLenum mode;
     int count;
     GLenum type;
-
 };
 
 class Renderer {

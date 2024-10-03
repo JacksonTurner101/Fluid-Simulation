@@ -1,5 +1,3 @@
-#pragma once
-
 #include "TestChangeColorUniform.h"
 
 namespace test {
@@ -18,6 +16,7 @@ namespace test {
 		vb.Bind();
 		vao.Bind();
 		ib.Bind();
+
 		float vertices[8] = {
 			//top left position 
 			-0.5f,0.5f,

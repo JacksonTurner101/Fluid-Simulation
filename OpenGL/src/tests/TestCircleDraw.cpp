@@ -1,5 +1,3 @@
-#pragma once
-
 #include "TestCircleDraw.h"
 #include "glm/gtc/matrix_transform.hpp"
 

@@ -73,7 +73,6 @@ int main(void)
     float last = (float)glfwGetTime();
     float deltaTime = 0;
 
-
     while (!glfwWindowShouldClose(window))
     {
         // Delta Time
@@ -87,8 +86,6 @@ int main(void)
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
         ImGui::Begin("Variables");
-
-        
 
         test->OnUpdate(deltaTime);
         test->OnRender();

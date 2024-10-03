@@ -4,6 +4,7 @@
 #include <glew.h>
 
 class VertexArray {
+	static int boundVAO;
 
 private:
 	unsigned int m_Id;
@@ -15,4 +16,5 @@ public:
 	void AddVertexAttribPointer(int size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid* pointer);
 	void Bind() const;
 	void Unbind();
+	int QueryCurrentVAO();
 };

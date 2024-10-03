@@ -11,7 +11,7 @@ void Square::Draw()
 
 Square::Square()
 {
-	//setting some default values for a square shape
+	//default values for a square shape
 	//top left
 	m_Vertices[0] = -0.5f;
 	m_Vertices[1] = 0.5f;

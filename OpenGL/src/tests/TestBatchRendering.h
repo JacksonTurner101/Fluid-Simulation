@@ -3,10 +3,16 @@
 #include "Test.h"
 
 namespace test {
-	class TestChangeColorUniform : public Test {
+
+	struct Vertex {
+		glm::vec3 position;
+		glm::vec2 uvCoord;
+	};
+
+	class TestBatchRendering : public Test {
 	public:
-		TestChangeColorUniform();
-		~TestChangeColorUniform();
+		TestBatchRendering();
+		~TestBatchRendering();
 
 		void OnRender() override;
 		void OnUpdate(float deltaTime) override;
@@ -16,9 +22,6 @@ namespace test {
 		VertexBuffer vb;
 		IndexBuffer ib;
 		Shader shader;
-		float m_Color[4];
-		float changeValR;
-		float changeValG;
-		float changeValB;
+		
 	};
 }

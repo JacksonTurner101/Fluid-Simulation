@@ -1,5 +1,3 @@
-#pragma once
-
 #include "TestModelViewProjection.h"
 
 namespace test {
