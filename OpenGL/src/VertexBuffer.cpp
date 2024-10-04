@@ -1,10 +1,12 @@
-#include "VertexBuffer.h"
 #include "Renderer.h"
+#include "VertexBuffer.h"
+
+unsigned int VertexBuffer::boundVB = 0;
 
 VertexBuffer::VertexBuffer(const void* data, unsigned int size)
 {
     GLCall(glGenBuffers(1, &m_RendererID));
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_RendererID));
+    Bind();
     GLCall(glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW));
 }
 
@@ -14,7 +16,7 @@ VertexBuffer::VertexBuffer()
 }
 
 void VertexBuffer::AddData(const void* data, unsigned int size) {
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_RendererID));
+    Bind();
     GLCall(glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW));
 }
 
@@ -25,7 +27,10 @@ VertexBuffer::~VertexBuffer()
 
 void VertexBuffer::Bind() const
 {
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_RendererID));
+    if (boundVB != m_RendererID) {
+        GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_RendererID));
+        boundVB = m_RendererID;
+    }
 
 }
 
@@ -35,8 +40,8 @@ void VertexBuffer::Unbind() const
 
 }
 
-void VertexBuffer::ReserveSpace(unsigned int size, GLenum usage)
+void VertexBuffer::ReserveSpace(unsigned int size, GLenum usage) const
 {
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_RendererID));
+    Bind();
     GLCall(glBufferData(GL_ARRAY_BUFFER, size, nullptr, usage));
 }

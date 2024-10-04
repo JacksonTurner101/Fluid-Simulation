@@ -5,7 +5,7 @@
 namespace test {
 
 	struct Vertex {
-		glm::vec3 position;
+		glm::vec2 position;
 		glm::vec2 uvCoord;
 	};
 
@@ -22,6 +22,7 @@ namespace test {
 		VertexBuffer vb;
 		IndexBuffer ib;
 		Shader shader;
-		
+		glm::mat4 mvpMatrix;
+
 	};
 }

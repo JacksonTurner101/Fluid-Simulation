@@ -36,7 +36,6 @@ namespace test {
 
 		ib.AddData(indices, 6);
 
-
 		projectionMatrix = glm::ortho(-4.0f, 4.0f, -3.0f, 3.0f, -1.0f, 1.0f);
 		viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 		glm::mat4 MVPMatrix = modelMatrix * viewMatrix * projectionMatrix;

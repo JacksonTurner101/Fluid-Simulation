@@ -4,7 +4,7 @@
 #include <glew.h>
 
 class VertexArray {
-	static int boundVAO;
+	static unsigned int boundVAO;
 
 private:
 	unsigned int m_Id;

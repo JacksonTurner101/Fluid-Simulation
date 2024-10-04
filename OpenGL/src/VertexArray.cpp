@@ -4,7 +4,7 @@
 
 //static variable to keep track of currently bound vao
 
-int VertexArray::boundVAO = 0;
+unsigned int VertexArray::boundVAO = 0;
 
 VertexArray::VertexArray() {
 	GLCall(glGenVertexArrays(1, &m_Id));
