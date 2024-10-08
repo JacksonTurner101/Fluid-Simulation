@@ -42,7 +42,6 @@ namespace test {
 		shader.Bind();
 		shader.SetUniformMat4f("u_MVP", mvpMatrix);
 
-
 	}
 
 	test::TestCircleDraw::~TestCircleDraw()

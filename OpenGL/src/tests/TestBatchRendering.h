@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Test.h"
+#include "glm/glm.hpp" 
+#include <array>
 
 namespace test {
 
@@ -17,12 +19,14 @@ namespace test {
 		void OnRender() override;
 		void OnUpdate(float deltaTime) override;
 		void OnImGuiRender() override;
+		std::array<int, 6> CreateQuadIndices(int quadIndex);
 	private:
 		VertexArray vao;
 		VertexBuffer vb;
 		IndexBuffer ib;
 		Shader shader;
 		glm::mat4 mvpMatrix;
-
+		glm::vec2 ball1Pos;
+		glm::vec2 ball2Pos;
 	};
 }

@@ -41,9 +41,6 @@ namespace test {
 		viewMatrix = glm::scale(viewMatrix, glm::vec3(ball.size, ball.size, ball.size));
 		glm::mat4 MVPMatrix = modelMatrix * viewMatrix * projectionMatrix;
 
-		//top and bottom direction vector = Vec2(1,0)
-		//left and right direction vector = Vec2(0,1)
-
 	}
 
 	test::TestPhysics::~TestPhysics()
