@@ -20,6 +20,7 @@ namespace test {
 		void OnUpdate(float deltaTime) override;
 		void OnImGuiRender() override;
 		std::array<int, 6> CreateQuadIndices(int quadIndex);
+		std::array<Vertex, 4> CreateQuadVertices(float posX, float posY);
 	private:
 		VertexArray vao;
 		VertexBuffer vb;
@@ -28,5 +29,8 @@ namespace test {
 		glm::mat4 mvpMatrix;
 		glm::vec2 ball1Pos;
 		glm::vec2 ball2Pos;
+
+		std::vector<glm::vec2> ballPositions;
+		int numOfBalls;
 	};
 }

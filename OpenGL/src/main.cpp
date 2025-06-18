@@ -30,23 +30,32 @@ int main(void)
 {
     GLFWwindow* window;
     Renderer* renderer = new Renderer();
+    
 
     /* Initialize the library */
     if (!glfwInit())
         return -1;
 
+    GLFWmonitor* primary = glfwGetPrimaryMonitor();
+    const GLFWvidmode* mode = glfwGetVideoMode(primary);
+    
     //-----OpenGL version 3.3 - Core-----//
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    //glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
+    int windowWidth = 1200;
+    int windowHeight = 800;
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(800, 600, "Hello World", NULL, NULL);
+    window = glfwCreateWindow(windowWidth, windowHeight, "Window 1", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
         return -1;
     }
+    glfwSetWindowPos(window, (mode->width / 2) - (windowWidth / 2), (mode->height/2) - (windowHeight / 2));
+    
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
@@ -74,6 +83,8 @@ int main(void)
     float last = (float)glfwGetTime();
     float deltaTime = 0;
 
+    bool showGui = false;
+    bool lastTKeyState = false;
     while (!glfwWindowShouldClose(window))
     {
         // Delta Time
@@ -81,21 +92,32 @@ int main(void)
         deltaTime = now - last;
         last = now;
 
+        bool tKeyState = glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS;
+        if (tKeyState && !lastTKeyState)
+        {
+            showGui = !showGui;
+        }
+        lastTKeyState = tKeyState;
+
         renderer->Clear();
-
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-        ImGui::Begin("Variables");
-
         test->OnUpdate(deltaTime);
         test->OnRender();
-        test->OnImGuiRender();
+        if (showGui)
+        {
+            ImGui_ImplOpenGL3_NewFrame();
+            ImGui_ImplGlfw_NewFrame();
+            ImGui::NewFrame();
+            ImGui::Begin("Variables");
 
-        ImGui::End();
+            test->OnImGuiRender();
 
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+            ImGui::End();
+
+            ImGui::Render();
+            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        }
+
+        
 
         glfwSwapBuffers(window);
         glfwPollEvents();
