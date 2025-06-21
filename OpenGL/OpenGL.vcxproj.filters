@@ -25,6 +25,8 @@
     <ClCompile Include="src\tests\TestChangeColorUniform.cpp" />
     <ClCompile Include="src\tests\TestPhysics.cpp" />
     <ClCompile Include="src\tests\TestBatchRendering.cpp" />
+    <ClCompile Include="src\tests\TestGridFluidSim2D.cpp" />
+    <ClCompile Include="src\tests\TestTexture2D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\vertex.shader" />
@@ -172,6 +174,9 @@
     <None Include="res\shaders\changingColorsFrag.shader" />
     <None Include="res\shaders\circleFrag.shader" />
     <None Include="res\shaders\circleVert.shader" />
+    <None Include="res\shaders\densityFrag.shader" />
+    <None Include="res\shaders\textureVert.shader" />
+    <None Include="res\shaders\textureFrag.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Renderer.h" />
@@ -487,5 +492,7 @@
     <ClInclude Include="src\tests\TestChangeColorUniform.h" />
     <ClInclude Include="src\tests\TestPhysics.h" />
     <ClInclude Include="src\tests\TestBatchRendering.h" />
+    <ClInclude Include="src\tests\TestGridFluidSim2D.h" />
+    <ClInclude Include="src\tests\TestTexture2D.h" />
   </ItemGroup>
 </Project>

@@ -23,7 +23,8 @@
 #include "tests/TestModelViewProjection.h"
 #include "tests/TestPhysics.h"
 #include "tests/TestBatchRendering.h"
-
+#include "tests/TestGridFluidSim2D.h"
+#include "tests/TestTexture2D.h"
 
 
 int main(void)
@@ -31,7 +32,6 @@ int main(void)
     GLFWwindow* window;
     Renderer* renderer = new Renderer();
     
-
     /* Initialize the library */
     if (!glfwInit())
         return -1;
@@ -45,7 +45,7 @@ int main(void)
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     //glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
-    int windowWidth = 1200;
+    int windowWidth = 800;
     int windowHeight = 800;
     /* Create a windowed mode window and its OpenGL context */
     window = glfwCreateWindow(windowWidth, windowHeight, "Window 1", NULL, NULL);
@@ -55,7 +55,6 @@ int main(void)
         return -1;
     }
     glfwSetWindowPos(window, (mode->width / 2) - (windowWidth / 2), (mode->height/2) - (windowHeight / 2));
-    
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
@@ -76,14 +75,14 @@ int main(void)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    test::TestBatchRendering* test = new test::TestBatchRendering();
+    test::TestTexture2D* test = new test::TestTexture2D();
     
     //-----Delta Time -----//
     float now = (float)glfwGetTime();
     float last = (float)glfwGetTime();
     float deltaTime = 0;
 
-    bool showGui = false;
+    bool showGui = true;
     bool lastTKeyState = false;
     while (!glfwWindowShouldClose(window))
     {
@@ -107,7 +106,7 @@ int main(void)
             ImGui_ImplOpenGL3_NewFrame();
             ImGui_ImplGlfw_NewFrame();
             ImGui::NewFrame();
-            ImGui::Begin("Variables");
+            ImGui::Begin("Press T to hide/show");
 
             test->OnImGuiRender();
 

@@ -82,7 +82,6 @@ namespace test {
 		m_Color[1] += changeValG * deltaTime;
 		m_Color[2] += changeValB * deltaTime;
 
-
 		shader.Bind();
 		shader.SetUniform4f("u_color", m_Color[0], m_Color[1], m_Color[2], m_Color[3]);
 
