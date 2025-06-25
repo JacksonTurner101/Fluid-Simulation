@@ -6,21 +6,22 @@
 namespace test {
 
 	TestGridFluidSim2D::TestGridFluidSim2D() :
-		vb(), ib(), vao(), shader("res/shaders/defaultVert.shader", "res/shaders/densityFrag.shader"),
-		fluid(100, 1, 1, 1), fluidTexture(0)
+		vb(), ib(), vao(), shader("res/shaders/textureVert.shader", "res/shaders/textureFrag.shader"),
+		fluidField(100, 0, 0, 1), size(100), cellSize(10), addedDensity(false)
 	{
 		vb.Bind();
 		vao.Bind();
 		ib.Bind();
+
 		float vertices[16] = {
 			//top left position   UV Coordinates
-			-1.0f,1.0f,			  0.0f, 1.0f,//0
+			-0.5f,0.5f,			  0.0f, 1.0f,//0
 			//top right position
-			1.0f,1.0f,			  1.0f,1.0f,//1     
+			0.5f,0.5f,			  1.0f,1.0f,//1     
 			//bottom left position
-			-1.0f,-1.0f,		  0.0f,0.0f,//2
+			-0.5f,-0.5f,		  0.0f,0.0f,//2
 			//bottom right position
-			1.0f,-1.0f,			  1.0f,0.0f//3
+			0.5f,-0.5f,			  1.0f,0.0f//3
 		};
 
 		vb.AddData(vertices, 16 * sizeof(float));
@@ -35,35 +36,66 @@ namespace test {
 
 		ib.AddData(indices, 6);
 
-		// creating a texture
+		bool isWhite = true;
+		for (int x = 0; x < size; x++) {
+			for (int y = 0; y < size; y++) {
+				Color color{ 0,0,0 };
+				if (isWhite) {
+					color.red = 255;
+					color.green = 255;
+					color.blue = 255;
+				}
+				GridCell cell = { x,y,cellSize,color };
+				grid.push_back(cell);
+				isWhite = !isWhite;
+			}
+			isWhite = !isWhite;
+		}
+		int width = size * cellSize;
+		int height = size * cellSize;
+		data = new unsigned char[width * height * 4];
+		for (int i = 0; i < size * size; i++) {
+			GridCell cell = grid[i];
+			for (int y = 0; y < cellSize; y++) {
+				for (int x = 0; x < cellSize; x++) {
+					int pixelX = cell.x * cellSize + x;
+					int pixelY = cell.y * cellSize + y;
+					int index = (pixelY * width + pixelX) * 4;
+					data[index + 0] = cell.color.red;
+					data[index + 1] = cell.color.green;
+					data[index + 2] = cell.color.blue;
+					data[index + 3] = 255;
+				}
+			}
+		}
+
 		glGenTextures(1, &fluidTexture);
 		glBindTexture(GL_TEXTURE_2D, fluidTexture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, fluid.size, fluid.size, 0, GL_RED, GL_FLOAT, nullptr);
-
-		// Texture parameters
+		// set the texture wrapping parameters
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		// set texture filtering parameters
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-		glBindTexture(GL_TEXTURE_2D, 0);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+		shader.Bind();
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, fluidTexture);
+		shader.SetUniform1i("u_Texture", 0);
 
 	}
 
 
 	TestGridFluidSim2D::~TestGridFluidSim2D()
 	{
-
+		delete[] data;
 	}
 
 	void TestGridFluidSim2D::OnRender()
 	{
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, fluidTexture);
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, fluid.size, fluid.size, GL_RED, GL_FLOAT, &fluid.density[0]);
-
 		shader.Bind();
-		shader.SetUniform1i("u_DensityTexture", 0);
 		vao.Bind();
 		ib.Bind();
 
@@ -71,33 +103,57 @@ namespace test {
 
 	}
 
-	void test::TestGridFluidSim2D::OnUpdate(float deltaTime, GLFWwindow* window)
+	void test::TestGridFluidSim2D::OnUpdate(float deltaTime)
 	{
+		if (!addedDensity) {
+			fluidField.FluidCubeAddDensity(2, 2, 0.01);
+			addedDensity = true;
+		}
+		fluidField.FluidCubeAddVelocity(2, 2, 0.001, 0.0);
+		fluidField.FluidCubeStep();
 
-		//if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
-			double xpos, ypos;
-			glfwGetCursorPos(glfwGetCurrentContext(), &xpos, &ypos);
+		for (int x = 0; x < size; x++) {
+			for (int y = 0; y < size; y++) {
+				float densityValue = fluidField.density[y * size + x];
 
-			// Convert screen coords to sim coords (assuming windowWidth/windowHeight is known)
-			int simX = (int)((xpos / 800) * fluid.size);
-			int simY = (int)(((800 - ypos) / 800) * fluid.size);
+				int colorValue = static_cast<int>(std::clamp((densityValue / 1.0f) * 255.0f, 0.0f, 255.0f));
 
-			simX = std::clamp(simX, 0, fluid.size - 1);
-			simY = std::clamp(simY, 0, fluid.size - 1);
-			// Inject density at simX, simY
+				grid[y * size + x].color.red = colorValue;
+				grid[y * size + x].color.green = 0;
+				grid[y * size + x].color.blue = 255 - colorValue;
 
-		//}
+			}
+		}
+
+		//std::cout << fluidField.density[50] << std::endl;
+
+		int width = size * cellSize;
+		int height = size * cellSize;
+		//data = new unsigned char[width * height * 4];
+		for (int i = 0; i < size * size; i++) {
+			for (int y = 0; y < cellSize; y++) {
+				for (int x = 0; x < cellSize; x++) {
+					int pixelX = grid[i].x * cellSize + x;
+					int pixelY = grid[i].y * cellSize + y;
+					int index = (pixelY * width + pixelX) * 4;
+					data[index + 0] = grid[i].color.red;
+					data[index + 1] = grid[i].color.green;
+					data[index + 2] = grid[i].color.blue;
+					data[index + 3] = 255;
+				}
+			}
+		}
+
+		glBindTexture(GL_TEXTURE_2D, fluidTexture);
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
 		
-		fluid.FluidCubeAddDensity(simX, simY, 1.0f);
-
-		fluid.FluidCubeStep();
 	}
 
 
 
 	void TestGridFluidSim2D::OnImGuiRender()
 	{
-
+		
 	}
 
 	FluidCube::FluidCube(int size, int diffusion, int viscosity, float dt) :
@@ -120,7 +176,7 @@ namespace test {
 	void FluidCube::FluidCubeAddDensity(int x, int y, float amount)
 	{
 		int N = size;
-		density[IX(x, y)] += amount;
+		density.at(IX(x, y)) += amount;
 	}
 
 	void FluidCube::FluidCubeAddVelocity(int x, int y, float amountX, float amountY)
@@ -128,8 +184,8 @@ namespace test {
 		int N = size;
 		int index = IX(x, y);
 
-		Vx[index] += amountX;
-		Vy[index] += amountY;
+		Vx.at(index) += amountX;
+		Vy.at(index) += amountY;
 
 	}
 
@@ -154,19 +210,19 @@ namespace test {
 	{
 		
 		for (int i = 1; i < N - 1; i++) {
-			x[IX(i, 0)] = b == 2 ? -x[IX(i, 1)] : x[IX(i, 1)];
-			x[IX(i, N - 1)] = b == 2 ? -x[IX(i, N - 2)] : x[IX(i, N - 2)];
+			x.at(IX(i, 0)) = b == 2 ? -x.at(IX(i, 1)) : x.at(IX(i, 1));
+			x.at(IX(i, N - 1)) = b == 2 ? -x.at(IX(i, N - 2)) : x.at(IX(i, N - 2));
 		}
 		
 		for (int j = 1; j < N - 1; j++) {
-			x[IX(0, j)] = b == 1 ? -x[IX(1, j)] : x[IX(1, j)];
-			x[IX(N - 1, j)] = b == 1 ? -x[IX(N - 2, j)] : x[IX(N - 2, j)];
+			x.at(IX(0, j)) = b == 1 ? -x.at(IX(1, j)) : x.at(IX(1, j));
+			x.at(IX(N - 1, j)) = b == 1 ? -x.at(IX(N - 2, j)) : x.at(IX(N - 2, j));
 		}
 		
-		x[IX(0, 0)] = 0.5 * (x[IX(1, 0)] + x[IX(0, 1)]);
-		x[IX(0, N - 1)] = 0.5 * (x[IX(1, N - 1)] + x[IX(0, N-2)]);
-		x[IX(N - 1, 0)] = 0.5 * (x[IX(N-2, 0)] + x[IX(N - 1, 1)]);
-		x[IX(N - 1, N - 1)] = 0.5 * (x[IX(N-2, N - 1)] + x[IX(N - 1, N-2)]);
+		x.at(IX(0, 0)) = 0.5 * (x.at(IX(1, 0)) + x.at(IX(0, 1)));
+		x.at(IX(0, N - 1)) = 0.5 * (x.at(IX(1, N - 1)) + x.at(IX(0, N-2)));
+		x.at(IX(N - 1, 0)) = 0.5 * (x.at(IX(N-2, 0)) + x.at(IX(N - 1, 1)));
+		x.at(IX(N - 1, N - 1)) = 0.5 * (x.at(IX(N-2, N - 1)) + x.at(IX(N - 1, N-2)));
 
 	}
 
@@ -202,7 +258,7 @@ namespace test {
 			for (int i = 1; i < N - 1; i++) {
 				div[IX(i, j)] = -0.5f * (
 					velocX[IX(i + 1, j)]
-					- velocX[IX(i - 1, j)]
+					- velocX.at(IX(i - 1, j))
 						+ velocY[IX(i, j + 1)]
 							- velocY[IX(i, j - 1)]
 										) / N;

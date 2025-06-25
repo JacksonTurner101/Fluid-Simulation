@@ -75,14 +75,14 @@ int main(void)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    test::TestTexture2D* test = new test::TestTexture2D();
+    test::TestGridFluidSim2D* test = new test::TestGridFluidSim2D();
     
     //-----Delta Time -----//
     float now = (float)glfwGetTime();
     float last = (float)glfwGetTime();
     float deltaTime = 0;
 
-    bool showGui = true;
+    bool showGui = false;
     bool lastTKeyState = false;
     while (!glfwWindowShouldClose(window))
     {
@@ -99,7 +99,7 @@ int main(void)
         lastTKeyState = tKeyState;
 
         renderer->Clear();
-        test->OnUpdate(deltaTime);
+        test->OnUpdate(0.0001f);
         test->OnRender();
         if (showGui)
         {

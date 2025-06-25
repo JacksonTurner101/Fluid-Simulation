@@ -1,10 +1,11 @@
 #pragma once
 
 #include "Test.h"
+#include "TestGridFluidSim2D.h"
 
 namespace test {
 
-	struct Color {
+	/*struct Color {
 		unsigned char red;
 		unsigned char green;
 		unsigned char blue;
@@ -15,7 +16,7 @@ namespace test {
 		int y;
 		int size;
 		Color color;
-	};
+	};*/
 
 	class TestTexture2D : Test {
 
@@ -33,11 +34,9 @@ namespace test {
 		VertexArray vao;
 		IndexBuffer ib;
 		Shader shader;
-		//int width;
-		//int height;
 		unsigned char* data;
 		unsigned int texture;
-		float timeValue;
+		int size;
 
 	};
 }

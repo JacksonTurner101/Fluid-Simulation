@@ -10,14 +10,26 @@
 
 namespace test {
 
+	struct Color {
+		unsigned char red;
+		unsigned char green;
+		unsigned char blue;
+	};
+
+	struct GridCell {
+		int x;
+		int y;
+		int size;
+		Color color;
+	};
+
 	struct FluidCube {
 		int size;
 		float dt;
 		float diff;
 		float visc;
 
-		//velocity of size
-		std::vector<float> s;
+		std::vector<float> s; //velocity field
 		std::vector<float> density;
 
 		std::vector<float> Vx;
@@ -45,10 +57,8 @@ namespace test {
 		TestGridFluidSim2D();
 		~TestGridFluidSim2D();
 
-
-
 		void OnRender() override;
-		void OnUpdate(float deltaTime, GLFWwindow* window);
+		void OnUpdate(float deltaTime);
 		void OnImGuiRender() override;
 
 	private:
@@ -56,8 +66,12 @@ namespace test {
 		VertexBuffer vb;
 		IndexBuffer ib;
 		Shader shader;
-		FluidCube fluid;
+		FluidCube fluidField;
 		unsigned int fluidTexture;
-
+		unsigned char* data;
+		std::vector<GridCell> grid;
+		int size;
+		int cellSize;
+		bool addedDensity;  // <-- this is correct
 	};
 }

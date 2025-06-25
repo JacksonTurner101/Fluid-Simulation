@@ -2,13 +2,13 @@
 #include <iostream>
 
 namespace test {
+
 	TestTexture2D::TestTexture2D()
 		: shader("res/shaders/textureVert.shader", "res/shaders/textureFrag.shader"),
 		vao(),
 		vb(),
 		ib(),
-		//width(256), height(256),
-		timeValue(0.0f)
+		size(20)
 	{
 		vb.Bind();
 		vao.Bind();
@@ -37,8 +37,7 @@ namespace test {
 
 		ib.AddData(indices, 6);
 
-		const int size = 10;
-		GridCell grid[size * size]{};
+		std::vector<GridCell> grid(size * size);
 		int cellSize = 20;
 
 		bool isWhite = true;
@@ -92,6 +91,7 @@ namespace test {
 		shader.SetUniform1i("u_Texture", 0);
 
 	}
+
 	TestTexture2D::~TestTexture2D()
 	{
 
