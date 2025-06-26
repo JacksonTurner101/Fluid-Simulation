@@ -99,7 +99,7 @@ int main(void)
         lastTKeyState = tKeyState;
 
         renderer->Clear();
-        test->OnUpdate(0.0001f);
+        test->OnUpdate(0.01);
         test->OnRender();
         if (showGui)
         {

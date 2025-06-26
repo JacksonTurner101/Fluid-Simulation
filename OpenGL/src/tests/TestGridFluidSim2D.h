@@ -72,6 +72,6 @@ namespace test {
 		std::vector<GridCell> grid;
 		int size;
 		int cellSize;
-		bool addedDensity;  // <-- this is correct
+		bool addDensity;
 	};
 }

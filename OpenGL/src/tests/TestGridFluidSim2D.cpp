@@ -7,7 +7,7 @@ namespace test {
 
 	TestGridFluidSim2D::TestGridFluidSim2D() :
 		vb(), ib(), vao(), shader("res/shaders/textureVert.shader", "res/shaders/textureFrag.shader"),
-		fluidField(100, 0, 0, 1), size(100), cellSize(10), addedDensity(false)
+		fluidField(100, 0, 0, 0.01), size(100), cellSize(10), addDensity(false)
 	{
 		vb.Bind();
 		vao.Bind();
@@ -105,11 +105,10 @@ namespace test {
 
 	void test::TestGridFluidSim2D::OnUpdate(float deltaTime)
 	{
-		if (!addedDensity) {
-			fluidField.FluidCubeAddDensity(2, 2, 0.01);
-			addedDensity = true;
-		}
-		fluidField.FluidCubeAddVelocity(2, 2, 0.001, 0.0);
+		
+		//fluidField.FluidCubeAddDensity(50, 50, 0.01);
+		//fluidField.FluidCubeAddVelocity(50, 50, 1, 1);
+		
 		fluidField.FluidCubeStep();
 
 		for (int x = 0; x < size; x++) {
@@ -153,6 +152,12 @@ namespace test {
 
 	void TestGridFluidSim2D::OnImGuiRender()
 	{
+		ImGui::Checkbox("checkbox", &addDensity);
+		if (addDensity) {
+
+			fluidField.FluidCubeAddDensity(50, 50, 10.01);
+			fluidField.FluidCubeAddVelocity(50, 50, -100, 100);
+		}
 		
 	}
 
@@ -232,12 +237,12 @@ namespace test {
 		for (int k = 0; k < iter; k++) {
 			for (int j = 1; j < N - 1; j++) {
 				for (int i = 1; i < N - 1; i++) {
-					x[IX(i, j)] =
-					(x0[IX(i, j)]
-					+ a * (x[IX(i + 1, j)]
-					+ x[IX(i - 1, j)]
-					+ x[IX(i, j + 1)]
-					+ x[IX(i, j - 1)]
+					x.at(IX(i, j)) =
+					(x0.at(IX(i, j))
+					+ a * (x.at(IX(i + 1, j))
+					+ x.at(IX(i - 1, j))
+					+ x.at(IX(i, j + 1))
+					+ x.at(IX(i, j - 1))
 					)) * cRecip;
 				}
 			}
@@ -297,41 +302,45 @@ namespace test {
 		float ifloat, jfloat;
 		int i, j;
 
-			for (j = 1, jfloat = 1; j < N - 1; j++, jfloat++) {
-				for (i = 1, ifloat = 1; i < N - 1; i++, ifloat++) {
-					tmp1 = dtx * velocX[IX(i, j)];
-					tmp2 = dty * velocY[IX(i, j)];
-					x = ifloat - tmp1;
-					y = jfloat - tmp2;
+		
+		for (j = 1, jfloat = 1; j < N - 1; j++, jfloat++) {
+			for (i = 1, ifloat = 1; i < N - 1; i++, ifloat++) {
+				tmp1 = dtx * velocX[IX(i, j)];
+				tmp2 = dty * velocY[IX(i, j)];
+				x = ifloat - tmp1;
+				y = jfloat - tmp2;
 
-					if (x < 0.5f) x = 0.5f;
-					if (x > Nfloat + 0.5f) x = Nfloat + 0.5f;
-					i0 = floorf(x);
-					i1 = i0 + 1.0f;
-					if (y < 0.5f) y = 0.5f;
-					if (y > Nfloat + 0.5f) y = Nfloat + 0.5f;
-					j0 = floorf(y);
-					j1 = j0 + 1.0f;
-					
+				if (x < 0.5f) x = 0.5f;
+				if (x > Nfloat + 0.5f) x = Nfloat + 0.5f;
+				i0 = floorf(x);
+				i1 = i0 + 1.0f;
+				if (y < 0.5f) y = 0.5f;
+				if (y > Nfloat + 0.5f) y = Nfloat + 0.5f;
+				j0 = floorf(y);
+				j1 = j0 + 1.0f;
 
-					s1 = x - i0;
-					s0 = 1.0f - s1;
-					t1 = y - j0;
-					t0 = 1.0f - t1;
-
-					int i0i = i0;
-					int i1i = i1;
-					int j0i = j0;
-					int j1i = j1;
+				s1 = x - i0;
+				s0 = 1.0f - s1;
+				t1 = y - j0;
+				t0 = 1.0f - t1;
 
 
-					d[IX(i, j)] =
-						s0 * (t0 * d0[IX(i0i, j0i)])
-						+ (t1 * d0[IX(i0i, j1i)])
-						+ s1 * (t0 * d0[IX(i1i, j0i)])
-						+ (t1 * d0[IX(i1i, j1i)]);
-				}
+				/*int i0i = std::clamp(i0, 0.0f, 99.0f);
+				int i1i = std::clamp(i1,0.0f, 99.0f);
+				int j0i = std::clamp(j0, 0.0f, 99.0f);
+				int j1i = std::clamp(j1,0.0f, 99.0f);*/
+
+				int i0i = i0;
+				int i1i = i1;
+				int j0i = j0;
+				int j1i = j1;
+
+				d[IX(i, j)] =
+					s0 * (t0 * d0[IX(i0i, j0i)] + t1 * d0[IX(i0i, j1i)]) +
+					s1 * (t0 * d0[IX(i1i, j0i)] + t1 * d0[IX(i1i, j1i)]);
 			}
+		}
+		
 		set_bnd(b, d, N);
 	}
 }
