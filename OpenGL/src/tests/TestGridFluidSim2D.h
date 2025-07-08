@@ -6,7 +6,7 @@
 #include <glfw3.h>
 
 
-#define IX(x, y) ((x) + (y) * N)
+#define IX(x, y) ((x) + (y) * (N))
 
 namespace test {
 
@@ -73,5 +73,7 @@ namespace test {
 		int size;
 		int cellSize;
 		bool addDensity;
+		glm::vec2 direction;
+
 	};
 }
