@@ -7,7 +7,7 @@ namespace test {
 
 	TestGridFluidSim2D::TestGridFluidSim2D() :
 		vb(), ib(), vao(), shader("res/shaders/textureVert.shader", "res/shaders/textureFrag.shader"),
-		fluidField(100, 0, 0, 0.01), size(100), cellSize(10), addDensity(false), direction(0,0)
+		fluidField(100, 0, 0, 0.01), size(100), cellSize(1), addDensity(false), direction(0,0)
 	{
 		vb.Bind();
 		vao.Bind();
@@ -103,11 +103,29 @@ namespace test {
 
 	}
 
+	void TestGridFluidSim2D::Reset()
+	{
+		fluidField.Reset();
+
+		// Reset grid colors to initial checkerboard pattern
+		bool isWhite = true;
+		for (int x = 0; x < size; x++) {
+			for (int y = 0; y < size; y++) {
+				Color color{ 0, 0, 0 };
+				if (isWhite) {
+					color.red = 255;
+					color.green = 255;
+					color.blue = 255;
+				}
+				grid[y * size + x].color = color;
+				isWhite = !isWhite;
+			}
+			isWhite = !isWhite;
+		}
+	}
+
 	void test::TestGridFluidSim2D::OnUpdate(float deltaTime)
 	{
-		
-		//fluidField.FluidCubeAddDensity(50, 50, 0.01);
-		//fluidField.FluidCubeAddVelocity(50, 50, 1, 1);
 		
 		fluidField.FluidCubeStep();
 
@@ -124,11 +142,8 @@ namespace test {
 			}
 		}
 
-		//std::cout << fluidField.density[50] << std::endl;
-
 		int width = size * cellSize;
 		int height = size * cellSize;
-		//data = new unsigned char[width * height * 4];
 		for (int i = 0; i < size * size; i++) {
 			for (int y = 0; y < cellSize; y++) {
 				for (int x = 0; x < cellSize; x++) {
@@ -158,15 +173,17 @@ namespace test {
 		ImGui::Checkbox("checkbox", &addDensity);
 		if (addDensity) {
 
-			fluidField.FluidCubeAddDensity(50, 50, 5);
+			fluidField.FluidCubeAddDensity(50, 50, 2);
 			fluidField.FluidCubeAddVelocity(50, 50, direction.x, direction.y);
-			//fluidField.FluidCubeAddVelocity(25, 25, direction.x, direction.y);
-			//fluidField.FluidCubeAddVelocity(25, 75, direction.x, direction.y);
-			//fluidField.FluidCubeAddVelocity(75, 25, direction.x, direction.y);
-			//fluidField.FluidCubeAddVelocity(75, 75, direction.x, direction.y);
-
 		}
-		
+
+		ImGui::Spacing();
+		ImGui::Separator();
+		ImGui::Spacing();
+
+		if (ImGui::Button("Reset Simulation (R)")) {
+			Reset();
+		}
 	}
 
 	FluidCube::FluidCube(int size, int diffusion, int viscosity, float dt) :
@@ -184,6 +201,16 @@ namespace test {
 
 	FluidCube::~FluidCube()
 	{
+	}
+
+	void FluidCube::Reset()
+	{
+		std::fill(s.begin(), s.end(), 0.0f);
+		std::fill(density.begin(), density.end(), 0.0f);
+		std::fill(Vx.begin(), Vx.end(), 0.0f);
+		std::fill(Vy.begin(), Vy.end(), 0.0f);
+		std::fill(Vx0.begin(), Vx0.end(), 0.0f);
+		std::fill(Vy0.begin(), Vy0.end(), 0.0f);
 	}
 
 	void FluidCube::FluidCubeAddDensity(int x, int y, float amount)

@@ -4,6 +4,7 @@
 #include "VertexArray.h"
 #include "IndexBuffer.h"
 #include "Shader.h"
+#include "MeshData.h"
 
 #define ASSERT(x) if (!(x)) __debugbreak();
 
@@ -17,6 +18,15 @@
 
 void GLClearError();
 bool GLLogCall(const char* function, const char* file, int line);
+
+struct Mesh {
+    MeshData data;
+    glm::vec3 postion;
+    glm::vec3 rotation;
+    glm::vec3 scale;
+
+    void Draw();
+};
 
 struct RenderData {
     VertexArray vao;

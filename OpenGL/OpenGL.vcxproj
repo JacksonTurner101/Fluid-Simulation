@@ -159,6 +159,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\OBJLoader.cpp" />
     <ClCompile Include="src\shapes\Circle.cpp" />
     <ClCompile Include="src\shapes\Shape.cpp" />
     <ClCompile Include="src\shapes\Square.cpp" />
@@ -172,6 +173,7 @@
     <ClCompile Include="src\tests\TestCircleDraw.cpp" />
     <ClCompile Include="src\tests\TestClearColor.cpp" />
     <ClCompile Include="src\tests\TestGridFluidSim2D.cpp" />
+    <ClCompile Include="src\tests\TestLoadingOBJs.cpp" />
     <ClCompile Include="src\tests\TestModelViewProjection.cpp" />
     <ClCompile Include="src\tests\TestPhysics.cpp" />
     <ClCompile Include="src\tests\TestTexture2D.cpp" />
@@ -337,6 +339,8 @@
     <None Include="src\vendor\glm\gtx\wrap.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\MeshData.h" />
+    <ClInclude Include="src\OBJLoader.h" />
     <ClInclude Include="src\shapes\Circle.h" />
     <ClInclude Include="src\shapes\Shape.h" />
     <ClInclude Include="src\shapes\Square.h" />
@@ -350,6 +354,7 @@
     <ClInclude Include="src\tests\TestCircleDraw.h" />
     <ClInclude Include="src\tests\TestClearColor.h" />
     <ClInclude Include="src\tests\TestGridFluidSim2D.h" />
+    <ClInclude Include="src\tests\TestLoadingOBJs.h" />
     <ClInclude Include="src\tests\TestModelViewProjection.h" />
     <ClInclude Include="src\tests\TestPhysics.h" />
     <ClInclude Include="src\tests\TestTexture2D.h" />

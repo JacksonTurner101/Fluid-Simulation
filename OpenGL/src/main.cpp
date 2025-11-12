@@ -71,7 +71,7 @@ int main(void)
         std::cout << "ERROR! Glew is not GLEW_OK!" << std::endl;
     }
 
-    //This enables alpha value so I can make stuff see through
+    //This enables alpha values to make stuff see through
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -82,8 +82,9 @@ int main(void)
     float last = (float)glfwGetTime();
     float deltaTime = 0;
 
-    bool showGui = false;
+    bool showGui = true;
     bool lastTKeyState = false;
+    bool lastRKeyState = false;
     while (!glfwWindowShouldClose(window))
     {
         // Delta Time
@@ -97,6 +98,13 @@ int main(void)
             showGui = !showGui;
         }
         lastTKeyState = tKeyState;
+
+        bool rKeyState = glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS;
+        if (rKeyState && !lastRKeyState)
+        {
+            test->Reset();
+        }
+        lastRKeyState = rKeyState;
 
         renderer->Clear();
         test->OnUpdate(0.01);
@@ -115,8 +123,6 @@ int main(void)
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         }
-
-        
 
         glfwSwapBuffers(window);
         glfwPollEvents();
