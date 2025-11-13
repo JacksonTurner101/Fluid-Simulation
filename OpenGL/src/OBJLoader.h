@@ -1,15 +1,30 @@
 #pragma once
 
 #include <string>
-#include "unordered_map"
-#include "glm\glm.hpp"
+#include <vector>
+#include "glm/glm.hpp"
 
-class OBJLoader {
+struct MeshData {
+    std::vector<glm::vec3> vertices;
+    std::vector<glm::vec2> textureCoord;
+    std::vector<glm::vec3> normals;
+    std::vector<int> indices;
+};
+
+class OBJLoader
+{
 public:
+    OBJLoader();
+    ~OBJLoader();
 
-	OBJLoader();
-	~OBJLoader();
-	void ReadOBJFile(std::string filePath);
+    MeshData ReadOBJFile(const std::string& filePath);
+
 private:
-
+    void ProcessVertex(
+        const std::string& vertexData,
+        const std::vector<glm::vec3>& tempVertices,
+        const std::vector<glm::vec2>& tempUVs,
+        const std::vector<glm::vec3>& tempNormals,
+        MeshData& meshData
+    );
 };

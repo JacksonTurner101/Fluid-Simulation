@@ -1,6 +1,6 @@
 #include "TestLoadingOBJs.h"
 
-test::TestLoadingOBJs::TestLoadingOBJs()
+test::TestLoadingOBJs::TestLoadingOBJs() : addDensity(true)
 {
 
 }
@@ -22,5 +22,12 @@ void test::TestLoadingOBJs::OnUpdate(float deltaTime)
 
 void test::TestLoadingOBJs::OnImGuiRender()
 {
+
+	ImGui::Checkbox("checkbox", &addDensity);
+
+
+	ImGui::Spacing();
+	ImGui::Separator();
+	ImGui::Spacing();
 
 }

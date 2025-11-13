@@ -127,6 +127,7 @@ namespace test {
 	void test::TestGridFluidSim2D::OnUpdate(float deltaTime)
 	{
 		
+
 		fluidField.FluidCubeStep();
 
 		for (int x = 0; x < size; x++) {

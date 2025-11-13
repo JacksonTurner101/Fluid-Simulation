@@ -25,6 +25,7 @@
 #include "tests/TestBatchRendering.h"
 #include "tests/TestGridFluidSim2D.h"
 #include "tests/TestTexture2D.h"
+#include "tests/TestLoadingOBJs.h"
 
 
 int main(void)
@@ -75,7 +76,7 @@ int main(void)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    test::TestGridFluidSim2D* test = new test::TestGridFluidSim2D();
+    test::TestLoadingOBJs* test = new test::TestLoadingOBJs();
     
     //-----Delta Time -----//
     float now = (float)glfwGetTime();
@@ -99,14 +100,14 @@ int main(void)
         }
         lastTKeyState = tKeyState;
 
-        bool rKeyState = glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS;
-        if (rKeyState && !lastRKeyState)
-        {
-            test->Reset();
-        }
-        lastRKeyState = rKeyState;
+        //bool rKeyState = glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS;
+        //if (rKeyState && !lastRKeyState)
+        //{
+        //    test->Reset();
+        //}
+        //lastRKeyState = rKeyState;
 
-        renderer->Clear();
+        renderer->Clear(); 
         test->OnUpdate(0.01);
         test->OnRender();
         if (showGui)

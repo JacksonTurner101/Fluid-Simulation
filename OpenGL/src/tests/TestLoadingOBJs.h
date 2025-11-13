@@ -17,7 +17,8 @@ namespace test {
 		void OnUpdate(float deltaTime) override;
 		void OnImGuiRender() override;
 	private:
-		
+		bool addDensity;
+
 	};
 
 }
