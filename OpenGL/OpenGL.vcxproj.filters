@@ -27,8 +27,9 @@
     <ClCompile Include="src\tests\TestBatchRendering.cpp" />
     <ClCompile Include="src\tests\TestGridFluidSim2D.cpp" />
     <ClCompile Include="src\tests\TestTexture2D.cpp" />
-    <ClCompile Include="src\OBJLoader.cpp" />
     <ClCompile Include="src\tests\TestLoadingOBJs.cpp" />
+    <ClCompile Include="src\MeshManager.cpp" />
+    <ClCompile Include="src\OBJParser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\vertex.shader" />
@@ -496,8 +497,9 @@
     <ClInclude Include="src\tests\TestBatchRendering.h" />
     <ClInclude Include="src\tests\TestGridFluidSim2D.h" />
     <ClInclude Include="src\tests\TestTexture2D.h" />
-    <ClInclude Include="src\OBJLoader.h" />
     <ClInclude Include="src\tests\TestLoadingOBJs.h" />
     <ClInclude Include="src\MeshData.h" />
+    <ClInclude Include="src\MeshManager.h" />
+    <ClInclude Include="src\OBJParser.h" />
   </ItemGroup>
 </Project>

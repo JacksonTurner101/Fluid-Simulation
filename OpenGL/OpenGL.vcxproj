@@ -99,7 +99,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\GLFW\lib;%(AdditionalLibraryDirectories);$(SolutionDir)Dependencies\GLEW\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32s.lib;glfw3.lib;OpenGL32.Lib;user32.lib;Gdi32.lib;Shell32.lib</AdditionalDependencies>
+      <AdditionalDependencies>glew32s.lib;glfw3.lib;OpenGL32.Lib;user32.lib;Gdi32.lib;Shell32.lib;comdlg32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -119,7 +119,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\GLFW\lib;%(AdditionalLibraryDirectories);$(SolutionDir)Dependencies\GLEW\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32s.lib;glfw3.lib;OpenGL32.Lib;user32.lib;Gdi32.lib;Shell32.lib</AdditionalDependencies>
+      <AdditionalDependencies>glew32s.lib;glfw3.lib;OpenGL32.Lib;user32.lib;Gdi32.lib;Shell32.lib;comdlg32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -135,7 +135,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\GLFW\lib;%(AdditionalLibraryDirectories);$(SolutionDir)Dependencies\GLEW\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32s.lib;glfw3.lib;OpenGL32.Lib;user32.lib;Gdi32.lib;Shell32.lib</AdditionalDependencies>
+      <AdditionalDependencies>glew32s.lib;glfw3.lib;OpenGL32.Lib;user32.lib;Gdi32.lib;Shell32.lib;comdlg32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -155,11 +155,12 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\GLFW\lib;%(AdditionalLibraryDirectories);$(SolutionDir)Dependencies\GLEW\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32s.lib;glfw3.lib;OpenGL32.Lib;user32.lib;Gdi32.lib;Shell32.lib</AdditionalDependencies>
+      <AdditionalDependencies>glew32s.lib;glfw3.lib;OpenGL32.Lib;user32.lib;Gdi32.lib;Shell32.lib;comdlg32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\OBJLoader.cpp" />
+    <ClCompile Include="src\MeshManager.cpp" />
+    <ClCompile Include="src\OBJParser.cpp" />
     <ClCompile Include="src\shapes\Circle.cpp" />
     <ClCompile Include="src\shapes\Shape.cpp" />
     <ClCompile Include="src\shapes\Square.cpp" />
@@ -340,7 +341,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\MeshData.h" />
-    <ClInclude Include="src\OBJLoader.h" />
+    <ClInclude Include="src\MeshManager.h" />
+    <ClInclude Include="src\OBJParser.h" />
     <ClInclude Include="src\shapes\Circle.h" />
     <ClInclude Include="src\shapes\Shape.h" />
     <ClInclude Include="src\shapes\Square.h" />
